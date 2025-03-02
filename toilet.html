@@ -264,15 +264,63 @@
         let timerInterval;
         let secondsLeft = 90;
         
+        // Cookie management functions
+        function setCookie(name, value, days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = "expires=" + date.toUTCString();
+            document.cookie = name + "=" + value + ";" + expires + ";path=/";
+        }
+        
+        function getCookie(name) {
+            const cname = name + "=";
+            const decodedCookie = decodeURIComponent(document.cookie);
+            const ca = decodedCookie.split(';');
+            for(let i = 0; i < ca.length; i++) {
+                let c = ca[i];
+                while (c.charAt(0) === ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(cname) === 0) {
+                    return c.substring(cname.length, c.length);
+                }
+            }
+            return "";
+        }
+        
+        // Check if we need to reset coupons for a new day
+        function checkDailyReset() {
+            const lastDate = getCookie("lastVisitDate");
+            const today = new Date().toDateString();
+            
+            if (lastDate !== today) {
+                // It's a new day, reset coupons
+                setCookie("usedCoupons", "", 7);
+                setCookie("couponsUsedCount", "0", 7);
+                setCookie("lastVisitDate", today, 7);
+                return true;
+            }
+            return false;
+        }
+        
         // Generate coupons
         function generateCoupons() {
             const couponContainer = document.getElementById('coupon-container');
             couponContainer.innerHTML = '';
             
+            // Get used coupons from cookies
+            const usedCouponsStr = getCookie("usedCoupons");
+            const usedCouponIds = usedCouponsStr ? usedCouponsStr.split(',').map(id => parseInt(id, 10)) : [];
+            
             coupons.forEach(coupon => {
                 const couponElement = document.createElement('div');
                 couponElement.className = 'coupon';
                 couponElement.id = `coupon-${coupon.id}`;
+                const isUsed = usedCouponIds.includes(coupon.id);
+                
+                if (isUsed) {
+                    couponElement.classList.add('used');
+                }
                 
                 couponElement.innerHTML = `
                     <div class="coupon-watermark">${coupon.icon}</div>
@@ -280,7 +328,9 @@
                     <div class="coupon-body">
                         <div class="coupon-icon">${coupon.icon}</div>
                         <p>Valid for one bathroom break</p>
-                        <button class="redeem-btn" onclick="redeemCoupon(${coupon.id})">Redeem Coupon</button>
+                        <button class="redeem-btn" onclick="redeemCoupon(${coupon.id})" ${isUsed ? 'disabled' : ''}>
+                            ${isUsed ? 'Used' : 'Redeem Coupon'}
+                        </button>
                     </div>
                 `;
                 
@@ -298,7 +348,16 @@
                 redeemBtn.disabled = true;
                 redeemBtn.innerText = 'Used';
                 
-                couponsUsed++;
+                // Update cookies
+                let usedCouponsStr = getCookie("usedCoupons");
+                let usedCouponIds = usedCouponsStr ? usedCouponsStr.split(',') : [];
+                usedCouponIds.push(id);
+                
+                setCookie("usedCoupons", usedCouponIds.join(','), 7);
+                
+                couponsUsed = usedCouponIds.length;
+                setCookie("couponsUsedCount", couponsUsed.toString(), 7);
+                
                 updateCouponsCount();
                 
                 startTimer();
@@ -307,6 +366,12 @@
         
         // Update coupons count
         function updateCouponsCount() {
+            // Get the count from cookies if available
+            const cookieCouponsUsed = getCookie("couponsUsedCount");
+            if (cookieCouponsUsed) {
+                couponsUsed = parseInt(cookieCouponsUsed, 10);
+            }
+            
             const couponsCount = document.getElementById('coupons-count');
             couponsCount.innerText = 5 - couponsUsed;
         }
@@ -373,6 +438,25 @@
         
         // Initialize
         window.addEventListener('DOMContentLoaded', () => {
+            // Check if it's a new day and reset if needed
+            const isNewDay = checkDailyReset();
+            
+            if (!isNewDay) {
+                // If not a new day, load existing data from cookies
+                const cookieCouponsUsed = getCookie("couponsUsedCount");
+                if (cookieCouponsUsed) {
+                    couponsUsed = parseInt(cookieCouponsUsed, 10);
+                }
+            } else {
+                // It's a new day, reset coupons used count
+                couponsUsed = 0;
+            }
+            
+            // Set last visit date if not already set
+            if (!getCookie("lastVisitDate")) {
+                setCookie("lastVisitDate", new Date().toDateString(), 7);
+            }
+            
             generateCoupons();
             updateCouponsCount();
         });
