@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bathroom Coupons for Iguana</title>
+    <style>
+        :root {
+            --primary: #2c8d7b;
+            --secondary: #f8d568;
+            --dark: #1a5e51;
+            --light: #e8f5f3;
+            --accent: #ff8a5c;
+            --danger: #d9534f;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        header {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.2rem;
+        }
+        
+        .subtitle {
+            font-style: italic;
+            margin-top: 0.5rem;
+            opacity: 0.9;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .coupon-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .coupon {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            border: 2px dashed var(--primary);
+        }
+        
+        .coupon:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+        }
+        
+        .coupon-header {
+            background-color: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .coupon-body {
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        .coupon-icon {
+            font-size: 2.5rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .redeem-btn {
+            background-color: var(--secondary);
+            color: var(--dark);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+        
+        .redeem-btn:hover {
+            background-color: #f0c030;
+        }
+        
+        .redeem-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .timer-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        
+        .timer-card {
+            background-color: white;
+            border-radius: 12px;
+            width: 80%;
+            max-width: 400px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .timer-display {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin: 1.5rem 0;
+            color: var(--dark);
+        }
+        
+        .timer-warning {
+            color: var(--danger);
+            font-weight: bold;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        .close-timer {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 1rem;
+        }
+        
+        .close-timer:hover {
+            background-color: var(--dark);
+        }
+        
+        .coupon-watermark {
+            position: absolute;
+            opacity: 0.1;
+            font-size: 5rem;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            color: var(--primary);
+            pointer-events: none;
+        }
+        
+        .used {
+            opacity: 0.5;
+            transform: none !important;
+        }
+        
+        .used::after {
+            content: "USED";
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-30deg);
+            font-size: 2.5rem;
+            color: var(--danger);
+            border: 5px solid var(--danger);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background-color: #e0e0e0;
+            border-radius: 3px;
+            margin-top: 1rem;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            width: 100%;
+            background-color: var(--primary);
+            transition: width 1s linear;
+        }
+        
+        .coupons-left {
+            margin-top: 2rem;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: var(--dark);
+        }
+        
+        @media (max-width: 600px) {
+            .coupon-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Bathroom Coupons for Iguana</h1>
+        <div class="subtitle">Your timed bathroom break solution</div>
+    </header>
+    
+    <div class="container">
+        <div class="coupons-left">Coupons Remaining: <span id="coupons-count">5</span></div>
+        
+        <div class="coupon-container" id="coupon-container">
+            <!-- Coupons will be generated here -->
+        </div>
+    </div>
+    
+    <div class="timer-container" id="timer-container">
+        <div class="timer-card">
+            <h2>Bathroom Break Timer</h2>
+            <div class="timer-display" id="timer-display">1:30</div>
+            <div class="progress-bar">
+                <div class="progress" id="progress-bar"></div>
+            </div>
+            <div class="timer-warning" id="timer-warning">⚠️ Time is almost up! Please finish up soon.</div>
+            <button class="close-timer" id="close-timer">End Break Early</button>
+        </div>
+    </div>
+    
+    <script>
+        // Coupon data
+        const coupons = [
+            { id: 1, name: "Break Coupon #1", icon: "🚻" },
+            { id: 2, name: "Break Coupon #2", icon: "🚻" },
+            { id: 3, name: "Break Coupon #3", icon: "🚻" },
+            { id: 4, name: "Break Coupon #4", icon: "🚻" },
+            { id: 5, name: "Break Coupon #5", icon: "🚻" }
+        ];
+        
+        let couponsUsed = 0;
+        let timerInterval;
+        let secondsLeft = 90;
+        
+        // Generate coupons
+        function generateCoupons() {
+            const couponContainer = document.getElementById('coupon-container');
+            couponContainer.innerHTML = '';
+            
+            coupons.forEach(coupon => {
+                const couponElement = document.createElement('div');
+                couponElement.className = 'coupon';
+                couponElement.id = `coupon-${coupon.id}`;
+                
+                couponElement.innerHTML = `
+                    <div class="coupon-watermark">${coupon.icon}</div>
+                    <div class="coupon-header">${coupon.name}</div>
+                    <div class="coupon-body">
+                        <div class="coupon-icon">${coupon.icon}</div>
+                        <p>Valid for one bathroom break</p>
+                        <button class="redeem-btn" onclick="redeemCoupon(${coupon.id})">Redeem Coupon</button>
+                    </div>
+                `;
+                
+                couponContainer.appendChild(couponElement);
+            });
+        }
+        
+        // Redeem a coupon
+        function redeemCoupon(id) {
+            const coupon = document.getElementById(`coupon-${id}`);
+            
+            if (!coupon.classList.contains('used')) {
+                coupon.classList.add('used');
+                const redeemBtn = coupon.querySelector('.redeem-btn');
+                redeemBtn.disabled = true;
+                redeemBtn.innerText = 'Used';
+                
+                couponsUsed++;
+                updateCouponsCount();
+                
+                startTimer();
+            }
+        }
+        
+        // Update coupons count
+        function updateCouponsCount() {
+            const couponsCount = document.getElementById('coupons-count');
+            couponsCount.innerText = 5 - couponsUsed;
+        }
+        
+        // Start timer
+        function startTimer() {
+            const timerContainer = document.getElementById('timer-container');
+            const timerDisplay = document.getElementById('timer-display');
+            const timerWarning = document.getElementById('timer-warning');
+            const progressBar = document.getElementById('progress-bar');
+            
+            timerContainer.style.display = 'flex';
+            secondsLeft = 90;
+            updateTimerDisplay();
+            progressBar.style.width = '100%';
+            timerWarning.style.display = 'none';
+            
+            clearInterval(timerInterval);
+            timerInterval = setInterval(() => {
+                secondsLeft--;
+                updateTimerDisplay();
+                
+                // Update progress bar
+                const percentLeft = (secondsLeft / 90) * 100;
+                progressBar.style.width = `${percentLeft}%`;
+                
+                // Show warning at 15 seconds
+                if (secondsLeft <= 15) {
+                    timerWarning.style.display = 'block';
+                    
+                    // Flash the timer when under 10 seconds
+                    if (secondsLeft <= 10) {
+                        if (secondsLeft % 2 === 0) {
+                            timerDisplay.style.color = '#d9534f';
+                        } else {
+                            timerDisplay.style.color = '#1a5e51';
+                        }
+                    }
+                }
+                
+                if (secondsLeft <= 0) {
+                    clearInterval(timerInterval);
+                    timerDisplay.innerText = "Time's Up!";
+                    timerDisplay.style.color = '#d9534f';
+                }
+                
+            }, 1000);
+        }
+        
+        // Update timer display
+        function updateTimerDisplay() {
+            const minutes = Math.floor(secondsLeft / 60);
+            const seconds = secondsLeft % 60;
+            const timerDisplay = document.getElementById('timer-display');
+            timerDisplay.innerText = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        }
+        
+        // Close timer
+        document.getElementById('close-timer').addEventListener('click', () => {
+            const timerContainer = document.getElementById('timer-container');
+            timerContainer.style.display = 'none';
+            clearInterval(timerInterval);
+        });
+        
+        // Initialize
+        window.addEventListener('DOMContentLoaded', () => {
+            generateCoupons();
+            updateCouponsCount();
+        });
+    </script>
+</body>
+</html>
