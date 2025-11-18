@@ -4,7 +4,29 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>wedding</title>
+	<title>Michał & Iga Wedding - Save the Date</title>
+	<meta name="description" content="Join us for our wedding celebration on July 24, 2027 at Pałac Tłokinia. Save the date!">
+
+	<!-- Open Graph / Facebook / WhatsApp -->
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://pekinek.github.io/wedding/">
+	<meta property="og:title" content="Michał & Iga Wedding - Save the Date">
+	<meta property="og:description" content="Join us for our wedding celebration on July 24, 2027 at Pałac Tłokinia. Save the date!">
+	<meta property="og:image" content="https://pekinek.github.io/wedding/banner.jpg">
+
+	<!-- Twitter -->
+	<meta property="twitter:card" content="summary_large_image">
+	<meta property="twitter:url" content="https://pekinek.github.io/wedding/">
+	<meta property="twitter:title" content="Michał & Iga Wedding - Save the Date">
+	<meta property="twitter:description" content="Join us for our wedding celebration on July 24, 2027 at Pałac Tłokinia. Save the date!">
+	<meta property="twitter:image" content="https://pekinek.github.io/wedding/banner.jpg">
+
+	<!-- Additional Meta Tags -->
+	<meta name="theme-color" content="#1e3a5f">
+
+	<!-- Favicon -->
+	<link rel="icon" type="image/png" href="favicon.png">
+	<link rel="apple-touch-icon" href="favicon.png">
 	<style>
 		* {
 			margin: 0;
@@ -322,7 +344,7 @@
 			<div class="location">Pałac Tłokinia</div>
 			<div class="add-to-calendar">
 				<a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Michał%20%26%20Iga%20Wedding&dates=20270724T150000Z/20270725T010000Z&details=Wedding%20Celebration&location=Pałac%20Tłokinia" target="_blank" class="calendar-button">Google Calendar</a>
-				<a href="#" id="download-ics" class="calendar-button">Download .ics</a>
+				<a href="wedding.ics" target="_blank" class="calendar-button">Download .ics</a>
 			</div>
 		</div>
 	</div>
@@ -358,40 +380,6 @@
 		// Update immediately and then every second
 		updateCountdown();
 		setInterval(updateCountdown, 1000);
-
-		// Open .ics file in default calendar app for all users
-		document.getElementById('download-ics').addEventListener('click', function(e) {
-			e.preventDefault();
-
-			const icsContent = `BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Wedding//NONSGML v1.0//EN
-BEGIN:VEVENT
-UID:wedding-2027@pekinek.github.io
-DTSTAMP:20250101T000000Z
-DTSTART:20270724T150000Z
-DTEND:20270725T010000Z
-SUMMARY:Michał & Iga Wedding
-LOCATION:Pałac Tłokinia
-DESCRIPTION:Wedding Celebration
-STATUS:CONFIRMED
-END:VEVENT
-END:VCALENDAR`;
-
-			const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-			const url = window.URL.createObjectURL(blob);
-
-			// Open in new tab to trigger default calendar app
-			const link = document.createElement('a');
-			link.href = url;
-			link.target = '_blank';
-			document.body.appendChild(link);
-			link.click();
-			document.body.removeChild(link);
-
-			// Clean up the URL after a short delay
-			setTimeout(() => window.URL.revokeObjectURL(url), 100);
-		});
 	</script>
 </body>
 
