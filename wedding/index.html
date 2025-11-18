@@ -58,6 +58,37 @@
 			letter-spacing: 2px;
 		}
 
+		.add-to-calendar {
+			margin-top: 30px;
+			display: flex;
+			gap: 15px;
+			justify-content: center;
+			flex-wrap: wrap;
+		}
+
+		.calendar-button {
+			display: inline-block;
+			padding: 12px 30px;
+			background-color: rgba(255, 255, 255, 0.15);
+			color: #ffffff;
+			text-decoration: none;
+			font-size: 16px;
+			font-weight: 300;
+			text-transform: uppercase;
+			letter-spacing: 2px;
+			border: 1px solid rgba(255, 255, 255, 0.3);
+			border-radius: 4px;
+			transition: all 0.3s ease;
+			backdrop-filter: blur(10px);
+			cursor: pointer;
+		}
+
+		.calendar-button:hover {
+			background-color: rgba(255, 255, 255, 0.25);
+			border-color: rgba(255, 255, 255, 0.5);
+			transform: translateY(-2px);
+		}
+
 		.time-block {
 			display: flex;
 			align-items: baseline;
@@ -117,6 +148,15 @@
 			.location {
 				font-size: 28px;
 			}
+
+			.calendar-button {
+				font-size: 14px;
+				padding: 10px 25px;
+			}
+
+			.add-to-calendar {
+				gap: 12px;
+			}
 		}
 
 		@media (max-width: 768px) {
@@ -146,6 +186,15 @@
 
 			.location {
 				font-size: 24px;
+			}
+
+			.calendar-button {
+				font-size: 13px;
+				padding: 10px 20px;
+			}
+
+			.add-to-calendar {
+				gap: 10px;
 			}
 		}
 
@@ -182,6 +231,17 @@
 			.location {
 				font-size: 20px;
 			}
+
+			.calendar-button {
+				font-size: 12px;
+				padding: 8px 16px;
+				letter-spacing: 1px;
+			}
+
+			.add-to-calendar {
+				gap: 8px;
+				flex-direction: column;
+			}
 		}
 
 		@media (max-width: 360px) {
@@ -217,6 +277,17 @@
 			.location {
 				font-size: 16px;
 			}
+
+			.calendar-button {
+				font-size: 11px;
+				padding: 8px 14px;
+				letter-spacing: 1px;
+			}
+
+			.add-to-calendar {
+				gap: 8px;
+				flex-direction: column;
+			}
 		}
 	</style>
 </head>
@@ -249,6 +320,10 @@
 			<div class="save-the-date-label">Save the Date</div>
 			<div class="location">2027-07-24T17:00:00+02:00</div>
 			<div class="location">Pałac Tłokinia</div>
+			<div class="add-to-calendar">
+				<a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Michał%20%26%20Iga%20Wedding&dates=20270724T150000Z/20270725T010000Z&details=Wedding%20Celebration&location=Pałac%20Tłokinia" target="_blank" class="calendar-button">Google Calendar</a>
+				<a href="#" id="download-ics" class="calendar-button">Download .ics</a>
+			</div>
 		</div>
 	</div>
 
@@ -283,6 +358,40 @@
 		// Update immediately and then every second
 		updateCountdown();
 		setInterval(updateCountdown, 1000);
+
+		// Open .ics file in default calendar app for all users
+		document.getElementById('download-ics').addEventListener('click', function(e) {
+			e.preventDefault();
+
+			const icsContent = `BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Wedding//NONSGML v1.0//EN
+BEGIN:VEVENT
+UID:wedding-2027@pekinek.github.io
+DTSTAMP:20250101T000000Z
+DTSTART:20270724T150000Z
+DTEND:20270725T010000Z
+SUMMARY:Michał & Iga Wedding
+LOCATION:Pałac Tłokinia
+DESCRIPTION:Wedding Celebration
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR`;
+
+			const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+			const url = window.URL.createObjectURL(blob);
+
+			// Open in new tab to trigger default calendar app
+			const link = document.createElement('a');
+			link.href = url;
+			link.target = '_blank';
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+
+			// Clean up the URL after a short delay
+			setTimeout(() => window.URL.revokeObjectURL(url), 100);
+		});
 	</script>
 </body>
 
