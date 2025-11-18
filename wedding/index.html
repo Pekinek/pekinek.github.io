@@ -27,12 +27,35 @@
 		.countdown-container {
 			position: relative;
 			padding: 40px 60px;
+			text-align: center;
 		}
 
 		.countdown {
 			display: flex;
 			align-items: baseline;
 			gap: 8px;
+			justify-content: center;
+		}
+
+		.save-the-date {
+			margin-top: 40px;
+			color: #ffffff;
+			text-align: center;
+		}
+
+		.save-the-date-label {
+			font-size: 24px;
+			font-weight: 300;
+			text-transform: uppercase;
+			letter-spacing: 3px;
+			margin-bottom: 10px;
+			opacity: 0.9;
+		}
+
+		.location {
+			font-size: 32px;
+			font-weight: 400;
+			letter-spacing: 2px;
 		}
 
 		.time-block {
@@ -86,6 +109,14 @@
 			.countdown-container {
 				padding: 30px 40px;
 			}
+
+			.save-the-date-label {
+				font-size: 20px;
+			}
+
+			.location {
+				font-size: 28px;
+			}
 		}
 
 		@media (max-width: 768px) {
@@ -103,6 +134,18 @@
 
 			.separator {
 				width: 12px;
+			}
+
+			.save-the-date {
+				margin-top: 30px;
+			}
+
+			.save-the-date-label {
+				font-size: 18px;
+			}
+
+			.location {
+				font-size: 24px;
 			}
 		}
 
@@ -126,6 +169,19 @@
 			.countdown {
 				gap: 4px;
 			}
+
+			.save-the-date {
+				margin-top: 25px;
+			}
+
+			.save-the-date-label {
+				font-size: 14px;
+				letter-spacing: 2px;
+			}
+
+			.location {
+				font-size: 20px;
+			}
 		}
 
 		@media (max-width: 360px) {
@@ -147,6 +203,19 @@
 
 			.countdown {
 				gap: 2px;
+			}
+
+			.save-the-date {
+				margin-top: 20px;
+			}
+
+			.save-the-date-label {
+				font-size: 12px;
+				letter-spacing: 1px;
+			}
+
+			.location {
+				font-size: 16px;
 			}
 		}
 	</style>
@@ -175,6 +244,11 @@
 				<span class="number" id="seconds">00</span>
 				<span class="label">S</span>
 			</div>
+		</div>
+		<div class="save-the-date">
+			<div class="save-the-date-label">Save the Date</div>
+			<div class="location">2027-07-24T17:00:00+02:00</div>
+			<div class="location">Pałac Tłokinia</div>
 		</div>
 	</div>
 
