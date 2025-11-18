@@ -4,7 +4,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Countdown Timer</title>
+	<title>wedding</title>
 	<style>
 		* {
 			margin: 0;
@@ -21,9 +21,7 @@
 		background-size: cover;
 		background-position: center;
 		background-repeat: no-repeat;
-		background-attachment: fixed;
 			font-family: 'Arial', sans-serif;
-			overflow: hidden;
 		}
 
 		.countdown-container {
@@ -76,31 +74,79 @@
 				radial-gradient(ellipse at 80% 20%, rgba(30, 58, 95, 0.2) 0%, transparent 50%);
 		}
 
-		@media (max-width: 768px) {
+		@media (max-width: 1024px) {
 			.number {
-				font-size: 48px;
+				font-size: 80px;
 			}
 
 			.label {
-				font-size: 38px;
+				font-size: 64px;
+			}
+
+			.countdown-container {
+				padding: 30px 40px;
+			}
+		}
+
+		@media (max-width: 768px) {
+			.number {
+				font-size: 56px;
+			}
+
+			.label {
+				font-size: 44px;
 			}
 
 			.countdown-container {
 				padding: 20px 30px;
 			}
+
+			.separator {
+				width: 12px;
+			}
 		}
 
 		@media (max-width: 480px) {
 			.number {
-				font-size: 32px;
+				font-size: 36px;
 			}
 
 			.label {
-				font-size: 26px;
+				font-size: 28px;
+			}
+
+			.countdown-container {
+				padding: 15px 20px;
 			}
 
 			.separator {
-				width: 10px;
+				width: 8px;
+			}
+
+			.countdown {
+				gap: 4px;
+			}
+		}
+
+		@media (max-width: 360px) {
+			.number {
+				font-size: 28px;
+			}
+
+			.label {
+				font-size: 22px;
+			}
+
+			.countdown-container {
+				padding: 10px 15px;
+			}
+
+			.separator {
+				width: 6px;
+			}
+
+			.countdown {
+				gap: 2px;
 			}
 		}
 	</style>
